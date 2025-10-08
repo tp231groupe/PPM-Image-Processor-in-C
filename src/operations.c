@@ -1,6 +1,19 @@
 #include "../lib/utils.h"
 #include "../lib/operations.h"
 
+
+/**
+ * @brief Fonce ou éclaircit les pixels d'une image dont la couleur dominante correspond à la couleur spécifiée.
+ *
+ * L'opération est effectuée sur place.
+ * Le pixel est fonçé si 'value' est positive (ajout de 'value'), et éclairci si 'value' est négative (soustraction de 'value)[cite: 39, 41, 54].
+ * Seuls les pixels dont la couleur dominante (la composante ayant l'entier le plus grand) correspond à 'dominant_color' sont modifiés[cite: 37, 38].
+ * Les nouvelles composantes de couleur doivent être bornées (écrêtées) entre 0 et la valeur maximale de couleur (255 dans l'exemple)[cite: 6].
+ *
+ * @param img Pointeur vers la structure Image à modifier.
+ * @param dominant_color Caractère représentant la couleur dominante à cibler ('R', 'G', ou 'B').
+ * @param value Entier à ajouter (foncer, value > 0) ou à soustraire (éclaircir, value < 0) à chacune des composantes R, G, et B du pixel[cite: 53, 54].
+ */
 void adjust_dominant_color(Image *img, char dominant_color, int value){ // <-- RAISSA
     // 1. Parcourir tous les pixels dans le tableau img->pixels.
     // 2. Pour chaque pixel, déterminer sa couleur dominante (la plus grande valeur parmi R, G, B)[cite: 38].
