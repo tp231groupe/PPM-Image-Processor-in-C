@@ -1,4 +1,4 @@
-# **PPM Image Processor in C (INF231 - TP/TD 1)**
+# **PPM Image Processor in C (INF231 - TP/TD 3)**
 
 ## **Description du Projet**
 

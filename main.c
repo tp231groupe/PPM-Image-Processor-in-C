@@ -5,9 +5,19 @@
 
 #define MAX_INPUT_SIZE 256
 
-#define ANSI_COLOR_GREEN   "\x1b[32m"
+#define ANSI_COLOR_GREEN "\x1b[32m"
 
-#define ANSI_COLOR_RESET   "\x1b[0m"
+#define ANSI_COLOR_RESET "\x1b[0m"
+
+#define ANSI_COLOR_BLUE "\x1b[34m"
+
+#define ANSI_COLOR_RED "\x1b[31m"
+
+#ifdef _WIN32
+    #define STRCMP_CASE_INSENSITIVE _stricmp
+#else
+    #define STRCMP_CASE_INSENSITIVE strcasecmp
+#endif
 
 
 int main(){
@@ -26,16 +36,16 @@ int main(){
         if(command == NULL)
             continue;
         
-        if(strcmp(command, "quit") == 0)
+        if(STRCMP_CASE_INSENSITIVE(command, "quit") == 0)
             exit(EXIT_SUCCESS);
         
-        else if(strcmp(command, "gris") == 0 || strcmp(command, "neg") == 0 || strcmp(command, "gris") == 0){
+        else if(STRCMP_CASE_INSENSITIVE(command, "gris") == 0 || STRCMP_CASE_INSENSITIVE(command, "neg") == 0 || STRCMP_CASE_INSENSITIVE(command, "gris") == 0){
             char *inputFile = strtok(NULL," ");
             char *outputFile = strtok(NULL," ");
             char *text;
 
             if(inputFile == NULL){
-                printf("Erreur: la commande %s necessite un fichier en entree", command);
+                printf(ANSI_COLOR_RED "Erreur: la commande %s necessite un fichier en entree\n" ANSI_COLOR_RESET, command);
                 continue;
             }
 
@@ -43,7 +53,7 @@ int main(){
                 strcpy(text,command);
             
             if(!fileExist(inputFile)){
-                printf("Erreur: fichier introuvable");
+                printf(ANSI_COLOR_RED "Erreur: fichier introuvable\n" ANSI_COLOR_RESET);
                 continue;
             }
 
@@ -56,17 +66,17 @@ int main(){
                 // free_image(img);
             }
         }
-        else if (strcmp(command, "size") == 0) {
+        else if (STRCMP_CASE_INSENSITIVE(command, "size") == 0) {
             char* inputFile = strtok(NULL, " ");
 
             if (inputFile == NULL) {
-                printf("Erreur: La commande size necessite un nom de fichier.\n");
+                printf(ANSI_COLOR_RED "Erreur: La commande size necessite un nom de fichier.\n" ANSI_COLOR_RESET);
                 continue;
             }
 
             // ... Validation fileExist(inputFile) ...
             if(!fileExist(inputFile)){
-                printf("Erreur: fichier introuvable %s \n", inputFile);
+                printf( ANSI_COLOR_RED "Erreur: fichier introuvable %s \n" ANSI_COLOR_RESET, inputFile);
                 continue;
             }
 
@@ -78,14 +88,14 @@ int main(){
             }
         }
         // --- COMMANDE COMPLEXE 'DOM' (avec 4 arguments) ---
-        else if (strcmp(command, "dom") == 0) {
+        else if (STRCMP_CASE_INSENSITIVE(command, "dom") == 0) {
             char* domColor = strtok(NULL, " ");   // Ex: 'R'
             char* strValue = strtok(NULL, " ");   // Ex: '4'
             char* inputFile = strtok(NULL, " ");  // Ex: 'image1.ppm'
             char* outputFile = strtok(NULL, " "); // Ex: 'resultat.ppm'
 
             if (domColor == NULL || strValue == NULL || inputFile == NULL) {
-                printf("Erreur: Usage dom <couleur> <valeur> <input_file>.\n");
+                printf(ANSI_COLOR_RED "Erreur: Usage dom <couleur> <valeur> <input_file>.\n" ANSI_COLOR_RESET);
                 continue;
             }
             
@@ -99,7 +109,7 @@ int main(){
         }
 
         // --- COMMANDE TRÈS COMPLEXE 'CUT' (avec 6 arguments) ---
-        else if (strcmp(command, "cut") == 0) {
+        else if (STRCMP_CASE_INSENSITIVE(command, "cut") == 0) {
 
             // Récupérer les 6 jetons nécessaires l1 l2 c1 c2 fichier_entree fichier_resultat
             char *inputFile = strtok(NULL, " ");
@@ -112,7 +122,7 @@ int main(){
             // ... récupérer strL2, strC1, strC2, inputFile, outputFile ...
 
             if (inputFile == NULL || strL1 == NULL || strL2 == NULL || strC1 == NULL || strC2 == NULL) {
-                printf("Erreur: Usage cut <l1> <l2> <c1> <c2> <input_file>.\n");
+                printf(ANSI_COLOR_RED "Erreur: Usage cut <l1> <l2> <c1> <c2> <input_file>.\n" ANSI_COLOR_RESET);
                 continue;
             }
 
@@ -137,9 +147,9 @@ int main(){
             if (cropped_img != NULL) {
                 generate_ppm(outputFile, cropped_img, "cut");
                 /*if (generate_ppm(outputFile, cropped_img, "cut")) {
-                    printf("opération effectuée. %s créé\n", outputFile);
+                    printf(ANSI_COLOR_BLUE "%s\n" ANSI_COLOR_RESET, outputFile);
                 } else {
-                    printf("Erreur lors de l'écriture du fichier de résultat '%s'.\n", outputFile);
+                    printf(ANSI_COLOR_RED "Erreur lors de l'écriture du fichier de résultat '%s'.\n" ANSI_COLOR_RESET, outputFile);
                 }*/
                 free_image(cropped_img);
             } else {
@@ -150,7 +160,7 @@ int main(){
         
         // --- COMMANDE INCONNUE ---
         else {
-            printf("Erreur: Commande '%s' introuvable.\n", command);
+            printf(ANSI_COLOR_RED "Erreur: Commande '%s' introuvable.\n" ANSI_COLOR_RESET, command);
         }
     }
     return 0;
