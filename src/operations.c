@@ -34,14 +34,34 @@ void adjust_dominant_color(Image *img, char dominant_color, int value){ // <-- R
  *
  * @param img Pointeur vers la structure Image à modifier.
  */
-void convert_to_grayscale(Image *img){ //<-- FATIMATOU
+void convert_to_grayscale(Image *images){ //Responsable<-- FATIMATOU Njapndounke 
     // 1. Parcourir tous les pixels dans le tableau img->pixels.
     // 2. Pour chaque pixel (r, g, b):
     //    a. Calculer la valeur moyenne : moyenne = (r + g + b) / 3.
     //    b. Affecter cette moyenne aux trois composantes R, G, et B du pixel (r = moyenne, g = moyenne, et b = moyenne).
 
-    //code here
+    // Vérification de sécurité
+    if (images == NULL || images->pixels == NULL) {
+        return;
+    }
+
+    unsigned width = images->width;
+    unsigned height = images->height;
+
+    
+    for (unsigned i = 0; i < height; i++) {      
+        for (unsigned j = 0; j < width; j++) {    
+            Pixel *pixy = &images->pixels[i][j];
+            
+            int sum = pixy->r + pixy->g + pixy->b;
+            unsigned char moy = (unsigned char)(sum / 3);
+            pixy->r = moy;
+            pixy->g = moy;
+            pixy->b = moy;
+        }
+    }
 }
+
 
 
 /**
