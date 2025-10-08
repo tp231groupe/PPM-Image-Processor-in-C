@@ -2,13 +2,13 @@
 
 ## **Description du Projet**
 
-Ce projet, réalisé dans le cadre du cours INF231 (Technique de Conception d'Algorithmes et Structures de Données) à l'Université de Yaoundé 1, consiste à développer un programme en **langage C** pour manipuler et traiter des images au format **PPM (Portable PixMap)**[cite: 4, 5].
+Ce projet, réalisé dans le cadre du cours INF231 (Technique de Conception d'Algorithmes et Structures de Données) à l'Université de Yaoundé 1, consiste à développer un programme en **langage C** pour manipuler et traiter des images au format **PPM (Portable PixMap)**.
 
-L'application `ppmviewer` implémente plusieurs opérations de base sur les images, accessibles via une interface de ligne de commande interactive[cite: 48, 50].
+L'application `ppmviewer` implémente plusieurs opérations de base sur les images, accessibles via une interface de ligne de commande interactive.
 
 ### **Format PPM Utilisé**
 
-Le projet se concentre sur la version **P3** du format PPM, où les valeurs de coordonnées RGB (Rouge, Vert, Bleu) sont stockées en texte brut[cite: 11, 17]. [cite\_start]Chaque coordonnée est un entier compris entre 0 et 255[cite: 6].
+Le projet se concentre sur la version **P3** du format PPM, où les valeurs de coordonnées RGB (Rouge, Vert, Bleu) sont stockées en texte brut. Chaque coordonnée est un entier compris entre 0 et 255.
 
 -----
 
@@ -18,13 +18,13 @@ L'application prend en charge les opérations suivantes, comme spécifié dans l
 
 | Catégorie | Commande | Description |
 | :--- | :--- | :--- |
-| **Modification Couleurs** | `dom c val fichier.ppm` | [cite\_start]Fonce ou éclaircit les pixels dont la couleur dominante est `c` (R, G, ou B) avec une valeur `val`[cite: 51, 52, 53, 54]. |
-| **Effet** | `gris fichier.ppm` | [cite\_start]Convertit l'image en niveaux de gris en utilisant la valeur moyenne des composantes RGB de chaque pixel[cite: 42, 43, 56]. |
-| **Effet** | `neg fichier.ppm fichier_resultat.ppm` | [cite\_start]Crée le négatif de l'image en utilisant le complémentaire de chaque couleur[cite: 44, 62]. |
-| **Filtre** | `fil fichier.ppm fichier_resultat.ppm` | [cite\_start]Applique le filtre médian sur chaque couleur d'un pixel en utilisant les 8 pixels voisins[cite: 47, 63]. |
-| **Extraction** | `cut f.ppm l1 l2 c1 c2 f_res.ppm` | [cite\_start]Découpe une partie de l'image entre les lignes $l_1$ et $l_2$ et les colonnes $c_1$ et $c_2$ et l'enregistre[cite: 46, 59]. |
-| **Information** | `size fichier.ppm` | [cite\_start]Affiche la taille (largeur x hauteur) de l'image en pixels[cite: 45, 57]. |
-| **Quitter** | `quit` | [cite\_start]Quitte l'application `ppmviewer`[cite: 64]. |
+| **Modification Couleurs** | `dom c val fichier.ppm` | Fonce ou éclaircit les pixels dont la couleur dominante est `c` (R, G, ou B) avec une valeur `val`. |
+| **Effet** | `gris fichier.ppm` | Convertit l'image en niveaux de gris en utilisant la valeur moyenne des composantes RGB de chaque pixel. |
+| **Effet** | `neg fichier.ppm fichier_resultat.ppm` | Crée le négatif de l'image en utilisant le complémentaire de chaque couleur. |
+| **Filtre** | `fil fichier.ppm fichier_resultat.ppm` | Applique le filtre médian sur chaque couleur d'un pixel en utilisant les 8 pixels voisins. |
+| **Extraction** | `cut f.ppm l1 l2 c1 c2 f_res.ppm` | Découpe une partie de l'image entre les lignes $l_1$ et $l_2$ et les colonnes $c_1$ et $c_2$ et l'enregistre. |
+| **Information** | `size fichier.ppm` | Affiche la taille (largeur x hauteur) de l'image en pixels. |
+| **Quitter** | `quit` | Quitte l'application `ppmviewer`. |
 
 -----
 
@@ -52,8 +52,8 @@ PPM-Image-Processor-in-C/
 
 Pour assurer l'efficacité et éviter les conflits de fusion, le travail a été strictement assigné et suivi :
 
-  * **Implémentation :** Les tâches ont été réparties dans le fichier `src/operations.c`. Chaque fonction porte un commentaire indiquant le responsable : `// <-- Responsable: [Initiales] -->`.
-  * [cite\_start]**Conventions :** Le document **`docs/GUIDE_DE_DEVELOPPEMENT.md`** détaille la syntaxe de création des branches, les conventions de commit, et les règles de travail strictes[cite: 70].
+  * **Implémentation :** Les tâches ont été réparties dans le fichier `src/operations.c`. Chaque fonction porte un commentaire indiquant le responsable : `// <-- Responsable: [nom]`.
+  * **Conventions :** Le document **`docs/GUIDE_DE_DEVELOPPEMENT.md`** détaille la syntaxe de création des branches, les conventions de commit, et les règles de travail strictes.
 
 | Membre de l'Équipe | Rôle Principal | Fonction(s) Attribuée(s) |
 | :--- | :--- | :--- |
@@ -86,21 +86,21 @@ Le programme s'exécute en mode interactif :
 ./ppmviewer
 ```
 
-[cite\_start]L'invite de commande **`ppmviewer >`** s'affichera[cite: 49].
+L'invite de commande **`ppmviewer >`** s'affichera.
 
 ### **Exemples d'Utilisation**
 
 ```bash
 ppmviewer > size assets/image1.ppm
-[cite_start]100x205 [cite: 76]
+100 x 205
 
-[cite_start]ppmviewer > cut assets/image1.ppm 1 50 1 100 mesimages/image2.ppm [cite: 77]
-[cite_start]opération effectuée [cite: 78]
+ppmviewer > cut assets/image1.ppm 1 50 1 100 mesimages/image2.ppm 
+opération effectuée
 
 ppmviewer > dom R 4 mesimages/image2.ppm
-[cite_start]opération effectuée mesimages/image2_dom.ppm créé [cite: 82]
+opération effectuée mesimages/image2_dom.ppm créé
 
-[cite_start]ppmviewer > quit [cite: 89]
+ppmviewer > quit
 ```
 
 -----
