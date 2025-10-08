@@ -18,14 +18,15 @@ Image* read_ppm(const char *filename) {
     Image *img;
     img = malloc(sizeof(Image));
     char maggic_number[3];
-    FILE *file = open(filename, "r");
+    FILE *file = fopen(filename, "r");
     
-    fscanf(file, "%2s", img->magic_number);
+
+    fscanf(file, "%2s", &img->magic_number);
     //skip_comments(file);
-    fscanf(file, "%u %u", img->width, img->height);
+    fscanf(file, "%u %u", &img->width, &img->height);
     //skip_comments(file);
-    fscanf(file, "%u", img->max_val);
-    
+    fscanf(file, "%u", &img->max_val);
+
     img->pixels = malloc(img->height * sizeof(Pixel*));
     for(int i = 0; i < img->height; i++)
         img->pixels[i] = malloc(img->width * sizeof(Pixel));
@@ -39,7 +40,8 @@ Image* read_ppm(const char *filename) {
         }
     }
 
-    fclose(file); 
+    fclose(file);
+    return img;
 }
 
 /**

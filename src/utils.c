@@ -66,14 +66,14 @@ unsigned clamp(int value){
 bool fileExist(const char *chemin_fichier) {
     FILE *fp;
     
-    fp = fopen(chemin_fichier, "rb");
+    fp = fopen(chemin_fichier, "r");
 
     if (fp != NULL) {
         fclose(fp); 
         return true;
-    } else {
-        return false;
     }
+    
+    return false;
 }
 
 /**
@@ -92,7 +92,7 @@ bool fileExist(const char *chemin_fichier) {
 char *generate_file_name(char *input_file, char *operation){
 
 
-    char output_file_name[512]; 
+    char *output_file_name; 
     char *dot = strrchr(input_file, '.');
     size_t len = dot - input_file;
     strncpy(output_file_name, input_file, len);
