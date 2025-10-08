@@ -27,8 +27,6 @@ void convert_to_grayscale(Image *images){ //Responsable<-- FATIMATOU Njapndounke
     //    a. Calculer la valeur moyenne : moyenne = (r + g + b) / 3.
     //    b. Affecter cette moyenne aux trois composantes R, G, et B du pixel (r = moyenne, g = moyenne, et b = moyenne).
 
-   
-
     // Vérification de sécurité
     if (images == NULL || images->pixels == NULL) {
         return;
