@@ -58,7 +58,7 @@ Pour assurer l'efficacité et éviter les conflits de fusion, le travail a été
 | Membre de l'Équipe | Rôle Principal | Fonction(s) Attribuée(s) |
 | :--- | :--- | :--- |
 | **[LEADS]** | Chef de Projet / Architecture | `ppm_io.c` (Lecture/Écriture), `main.c` (Parsing), **[...]** |
-| **[Membre 2]** | Développeur C | **[...]** |
+| **[MFOPIT MAR'YAM]** | Développeur C | **[ fonction `decouper une image.ppm`]** |
 | **[Membre 3]** | Développeur C | **[...]** |
 | **[Membre 4]** | Développeur C | **[...]** |
 
