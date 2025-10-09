@@ -1,7 +1,7 @@
 #include "lib/utils.h"
 #include "lib/ppm_io.h"
 #include "lib/operations.h"
-
+#include <ctype.h>
 
 #define MAX_INPUT_SIZE 256
 
@@ -42,15 +42,15 @@ int main(){
         else if(STRCMP_CASE_INSENSITIVE(command, "gris") == 0 || STRCMP_CASE_INSENSITIVE(command, "neg") == 0 || STRCMP_CASE_INSENSITIVE(command, "gris") == 0){
             char *inputFile = strtok(NULL," ");
             char *outputFile = strtok(NULL," ");
-            char text[64];
+            //char text[64];
 
             if(inputFile == NULL){
                 printf(ANSI_COLOR_RED "Erreur: la commande %s necessite un fichier en entree\n" ANSI_COLOR_RESET, command);
                 continue;
             }
 
-            if(outputFile == NULL)
-                strcpy(text,command);
+            if(!outputFile)
+                outputFile = generate_file_name(inputFile, command);
             
             if(!fileExist(inputFile)){
                 printf(ANSI_COLOR_RED "Erreur: fichier introuvable\n" ANSI_COLOR_RESET);
@@ -62,9 +62,6 @@ int main(){
                 // if 'gris' : convert_to_grayscale(img); // Opération sur place       
                 if(STRCMP_CASE_INSENSITIVE(command, "gris") == 0){
                     convert_to_grayscale(img);
-
-                    if(!outputFile)
-                        outputFile = generate_file_name(inputFile, command);
 
                     generate_ppm(outputFile, img);
                     const char *basename = strrchr(outputFile, '/');
@@ -78,7 +75,19 @@ int main(){
                 }
 
                 // if 'fil' : img = apply_median_filter(img); // Opération retournant une nouvelle image
-                // ...
+                // if 'neg' : create_negative(Image *img);
+                if(STRCMP_CASE_INSENSITIVE(command, "neg") == 0){
+                    create_negative(img);
+                    generate_ppm(outputFile, img);
+                    const char *basename = strrchr(outputFile, '/');
+
+                    if (!basename) 
+                        basename = strrchr(outputFile, '\\');
+                    if (basename) 
+                        basename++;  // sauter le slash
+
+                    printf(ANSI_COLOR_BLUE "🎉 Voilà votre fichier : %s !\n" ANSI_COLOR_RESET , basename ? basename : outputFile);
+                }
                 // write_ppm(outputFile, img, text);
                 free_image(img);
             }
@@ -117,12 +126,41 @@ int main(){
             }
             
             if(outputFile == NULL)
-                outputFile = generate_file_name(inputFile, "dom");
+                outputFile = generate_file_name(inputFile, command);
             
-            // ... Conversion de strValue en int (utiliser atoi ou sscanf) ...
+            // ... Conversion de strValue en int (utiliser atoi) ...
+            int value = atoi(strValue);
+
             // ... Validation de domColor (doit être 'R', 'G', ou 'B') ...
-            
+            char color = toupper((unsigned char)domColor[0]);
+            if (color != 'R' && color != 'G' && color != 'B') {
+                printf(ANSI_COLOR_RED "Erreur: couleur dominante invalide (R, G ou B attendus).\n" ANSI_COLOR_RESET);
+                continue;
+            }
+
             // ... Appeler read_ppm, adjust_dominant_color, write_ppm ...
+            Image *img = read_ppm(inputFile);
+            if (img == NULL) {
+                printf(ANSI_COLOR_RED "Erreur: impossible de lire le fichier %s\n" ANSI_COLOR_RESET, inputFile);
+                continue;
+            }
+
+            // Appliquer l'ajustement de couleur dominante
+            adjust_dominant_color(img, color, value);
+
+            // Sauvegarder l'image
+            generate_ppm(outputFile, img);
+
+            // Extraire seulement le nom du fichier sans chemin pour l'affichage
+            const char *basename = strrchr(outputFile, '/');
+            if (!basename) 
+                basename = strrchr(outputFile, '\\');
+            if (basename) 
+                basename++;  // sauter le slash
+
+            printf(ANSI_COLOR_BLUE "🎉 Voilà votre fichier : %s !\n" ANSI_COLOR_RESET, basename ? basename : outputFile);
+
+            free_image(img);
         }
 
         // --- COMMANDE TRÈS COMPLEXE 'CUT' (avec 6 arguments) ---
@@ -177,7 +215,7 @@ int main(){
                 if (!basename) basename = strrchr(outputFile, '\\');
                 if (basename) basename++;  // sauter le slash
 
-                printf(ANSI_COLOR_BLUE "🎉 Voilà votre fichier : %s !\n %s\n" ANSI_COLOR_RESET , basename ? basename : outputFile);
+                printf(ANSI_COLOR_BLUE "🎉 Voilà votre fichier : %s !\n" ANSI_COLOR_RESET , basename ? basename : outputFile);
                 //printf(ANSI_COLOR_BLUE "%s\n" ANSI_COLOR_RESET, outputFile);
                 free_image(cropped_img);
             } else {

@@ -23,61 +23,22 @@ void adjust_dominant_color(Image *img, char dominant_color, int value){ // <-- R
     //    b. Utiliser la fonction d'écrêtage (CLAMP) pour garantir que les nouvelles valeurs restent dans l'intervalle [0, 255].
     //    c. Mettre à jour les composantes R, G, B du pixel avec les valeurs écrêtées.
 
-    //code here
-    img.pixels = malloc(img.largeur*sizeof(Pixel *));
-   for(int i = 0; i < img.hauteur;i++){
-     img.pixels[i]= malloc(img.largeur * sizeof(Pixel));
-   }
+    if (!img || !img->pixels) return;
 
-   for(int i = 0;i < img.hauteur; i++){
-     for(int j = 0;j< img.largeur; j++){
-       fscanf(f,"%d %d %d", &img.pixels[i][j].rouge, &img.pixels[i][j].vert, &img.pixels[i][j].bleu);
-     }
-   }
-    fclose(f);
+    for (unsigned i = 0; i < img->height; i++) {
+        for (unsigned j = 0; j < img->width; j++) {
+            Pixel *p = &img->pixels[i][j];
 
-   int choix;
-   printf("\n1 - Augmenter l'intensite de la couleur dominante\n");
-   printf("2 - Diminuer l'intensite de la couleur dominante");
-   printf("Votre choix: ");
-   scanf("%d",&choix);
-    while(choix != 1 && choix != 2){
-       printf("choix invalide! Veuillez entrer 1 ou 2");
-       scanf("%d",&choix);
-    }
+            // Utilise ton utilitaire pour déterminer la couleur dominante
+            char max_color = find_max_rgb(p->r, p->g, p->b);
 
-   value = (choix == 1) ? 50 : -50;
-   for (int i = 0;i < img->hauteur; i++){
-     for(int j = 0;j < img->largeur; j++){
-        Pixel *p = &img->pixels[i][j];
-         char *val=unsigned find_max_rgb(p->rouge, p->vert, p->bleu);
-           if(choix == 1 && (strcmp(*p, dominant_color))==0)
-           {
-             *p->rouge += value;
-             *p->rouge = unsigned clamp (*p->rouge);
-              *p->vert += value;
-             *p->vert = unsigned clamp (*p->vert);
-             *p->bleu += value;
-             *p->bleu = unsigned clamp (*p->bleu);
+            if (max_color == dominant_color) {
+                p->r = clamp(p->r + value);
+                p->g = clamp(p->g + value);
+                p->b = clamp(p->b + value);
             }
-           else if(choix == 2 && (strcmp(*p, val)) == 0){
-              *p->rouge -= value;
-             *p->rouge = unsigned clamp (*p->rouge);
-              *p->vert -= value;
-             *p->vert = unsigned clamp (*p->vert);
-               *p->bleu -= value;
-              *p->bleu = unsigned clamp (*p->bleu);
-           }
-           else
-             printf("couleur non correspondante");
-
-           img->pixels[i][j].rouge = *p->rouge;
-           img->pixels[i][j].vert = *p->vert;
-           img->pixels[i][j].bleu = *p->bleu;
-
-      }
+        }
     }
-}
 }
 
 /**
@@ -117,7 +78,6 @@ void convert_to_grayscale(Image *images){ //Responsable<-- FATIMATOU Njapndounke
 }
 
 
-
 /**
  * @brief Crée le négatif de l'image en changeant chaque couleur par son complémentaire.
  *
@@ -134,7 +94,22 @@ void create_negative(Image *img){ // <-- CALEB
     //    c. Calculer nouveau_B = img->max_color_val - B.
     // 3. Mettre à jour les composantes R, G, B du pixel avec les nouvelles valeurs.
 
-    //code here
+    if (!img || !img->pixels) return;
+
+    for (unsigned i = 0; i < img->height; i++) {
+        for (unsigned j = 0; j < img->width; j++) {
+            Pixel *p = &img->pixels[i][j];
+
+            p->r = img->max_val - p->r;
+            p->g = img->max_val - p->g;
+            p->b = img->max_val - p->b;
+
+            // Si tu veux assurer l'écrêtage (au cas où max_val != 255)
+            p->r = clamp(p->r);
+            p->g = clamp(p->g);
+            p->b = clamp(p->b);
+        }
+    }
 }
 
 
