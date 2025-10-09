@@ -3,16 +3,6 @@
 #include "lib/operations.h"
 #include <ctype.h>
 
-#define MAX_INPUT_SIZE 256
-
-#define ANSI_COLOR_GREEN "\x1b[32m"
-
-#define ANSI_COLOR_RESET "\x1b[0m"
-
-#define ANSI_COLOR_BLUE "\x1b[34m"
-
-#define ANSI_COLOR_RED "\x1b[31m"
-
 #ifdef _WIN32
     #define STRCMP_CASE_INSENSITIVE _stricmp
 #else
@@ -39,10 +29,9 @@ int main(){
         if(STRCMP_CASE_INSENSITIVE(command, "quit") == 0)
             exit(EXIT_SUCCESS);
         
-        else if(STRCMP_CASE_INSENSITIVE(command, "gris") == 0 || STRCMP_CASE_INSENSITIVE(command, "neg") == 0 || STRCMP_CASE_INSENSITIVE(command, "gris") == 0){
+        else if(STRCMP_CASE_INSENSITIVE(command, "gris") == 0 || STRCMP_CASE_INSENSITIVE(command, "neg") == 0 || STRCMP_CASE_INSENSITIVE(command, "fil") == 0){
             char *inputFile = strtok(NULL," ");
             char *outputFile = strtok(NULL," ");
-            //char text[64];
 
             if(inputFile == NULL){
                 printf(ANSI_COLOR_RED "Erreur: la commande %s necessite un fichier en entree\n" ANSI_COLOR_RESET, command);
@@ -75,6 +64,21 @@ int main(){
                 }
 
                 // if 'fil' : img = apply_median_filter(img); // Opération retournant une nouvelle image
+                if(STRCMP_CASE_INSENSITIVE(command, "fil") == 0){
+                    Image *fil_img = apply_median_filter(img);
+                    if (fil_img != NULL) {
+                        generate_ppm(outputFile, fil_img);
+                        const char *basename = strrchr(outputFile, '/');
+                        if (!basename) basename = strrchr(outputFile, '\\');
+                        if (basename) basename++;  // sauter le slash
+
+                        printf(ANSI_COLOR_BLUE "🎉 Voilà votre fichier : %s !\n" ANSI_COLOR_RESET , basename ? basename : outputFile);
+                        //printf(ANSI_COLOR_BLUE "%s\n" ANSI_COLOR_RESET, outputFile);
+                        free_image(fil_img);
+                    } else {
+                        printf(ANSI_COLOR_RED "Erreur: Filtrage de l'image échoué.\n" ANSI_COLOR_RESET);
+                    }
+                }
                 // if 'neg' : create_negative(Image *img);
                 if(STRCMP_CASE_INSENSITIVE(command, "neg") == 0){
                     create_negative(img);
@@ -92,6 +96,7 @@ int main(){
                 free_image(img);
             }
         }
+        
         else if (STRCMP_CASE_INSENSITIVE(command, "size") == 0) {
             char* inputFile = strtok(NULL, " ");
 

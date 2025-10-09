@@ -5,6 +5,15 @@
 #include <string.h>
 #include <stdbool.h>
 
+#define MAX_INPUT_SIZE 256
+
+#define ANSI_COLOR_GREEN "\x1b[32m"
+
+#define ANSI_COLOR_RESET "\x1b[0m"
+
+#define ANSI_COLOR_BLUE "\x1b[34m"
+
+#define ANSI_COLOR_RED "\x1b[31m"
 // Definition de la structure pixel
 typedef struct {
     unsigned char r, g, b; // Couleur RGB (0 à 255)

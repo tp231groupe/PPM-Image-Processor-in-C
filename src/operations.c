@@ -124,7 +124,7 @@ void display_size(const Image *img){
     // 1. Accéder aux champs img->width (largeur) et img->height (hauteur) de la structure.
     // 2. Afficher les dimensions sur la sortie standard au format "largeur x hauteur" (ex: "100x205").
 
-    printf("%u x %u\n", img->width, img->height);
+    printf(ANSI_COLOR_BLUE "%u x %u\n" ANSI_COLOR_RESET, img->width, img->height);
 
 }
 
@@ -196,6 +196,10 @@ Image* crop_image(const Image *img, int l1, int l2, int c1, int c2){ // <-- MAR'
  * @return Pointeur vers la NOUVELLE structure Image avec le filtre appliqué.
 */
 
+int compare_uint(const void *a, const void *b) {
+    return (*(unsigned char*)a) - (*(unsigned char*)b);
+}
+
 Image* apply_median_filter(const Image *img){ //<--Cedric
     // 1. Allouer dynamiquement la mémoire pour une NOUVELLE structure Image (resultat) de même taille que l'originale.
     // 2. Copier les informations d'en-tête (version, largeur, hauteur, max_color_val).
@@ -209,6 +213,68 @@ Image* apply_median_filter(const Image *img){ //<--Cedric
     // 6. Retourner le pointeur vers la NOUVELLE structure Image.
 
 
-    //code here
+    if (!img || !img->pixels) return NULL;
+
+    int h = img->height;
+    int w = img->width;
+
+    // 1. Allouer la nouvelle image
+    Image *result = malloc(sizeof(Image));
+    if (!result) return NULL;
+
+    strcpy(result->magic_number, img->magic_number);
+    result->width = w;
+    result->height = h;
+    result->max_val = img->max_val;
+
+    result->pixels = malloc(h * sizeof(Pixel*));
+    if (!result->pixels) {
+        free(result);
+        return NULL;
+    }
+
+    for (int i = 0; i < h; i++) {
+        result->pixels[i] = malloc(w * sizeof(Pixel));
+        if (!result->pixels[i]) {
+            for (int k = 0; k < i; k++) free(result->pixels[k]);
+            free(result->pixels);
+            free(result);
+            return NULL;
+        }
+    }
+
+    // 2. Parcourir chaque pixel
+    for (int i = 0; i < h; i++) {
+        for (int j = 0; j < w; j++) {
+            unsigned char neighbors_r[9], neighbors_g[9], neighbors_b[9];
+            int count = 0;
+
+            // Collecte des voisins (3x3)
+            for (int di = -1; di <= 1; di++) {
+                for (int dj = -1; dj <= 1; dj++) {
+                    int ni = i + di;
+                    int nj = j + dj;
+                    if (ni >= 0 && ni < h && nj >= 0 && nj < w) {
+                        neighbors_r[count] = img->pixels[ni][nj].r;
+                        neighbors_g[count] = img->pixels[ni][nj].g;
+                        neighbors_b[count] = img->pixels[ni][nj].b;
+                        count++;
+                    }
+                }
+            }
+
+            // Trier les voisins et prendre la médiane
+            qsort(neighbors_r, count, sizeof(unsigned char), compare_uint);
+            qsort(neighbors_g, count, sizeof(unsigned char), compare_uint);
+            qsort(neighbors_b, count, sizeof(unsigned char), compare_uint);
+
+            int median_index = count / 2;
+            result->pixels[i][j].r = neighbors_r[median_index];
+            result->pixels[i][j].g = neighbors_g[median_index];
+            result->pixels[i][j].b = neighbors_b[median_index];
+        }
+    }
+
+    return result;
 
 }
