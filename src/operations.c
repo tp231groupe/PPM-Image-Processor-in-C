@@ -53,7 +53,7 @@ void convert_to_grayscale(Image *images){ //Responsable<-- FATIMATOU Njapndounke
         for (unsigned j = 0; j < width; j++) {    
             Pixel *pixy = &images->pixels[i][j];
             
-            int sum = pixy->r + pixy->g + pixy->b;
+            int sum = (int)pixy->r + (int)pixy->g + (int)pixy->b;
             unsigned char moy = (unsigned char)(sum / 3);
             pixy->r = moy;
             pixy->g = moy;
