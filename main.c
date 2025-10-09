@@ -42,7 +42,7 @@ int main(){
         else if(STRCMP_CASE_INSENSITIVE(command, "gris") == 0 || STRCMP_CASE_INSENSITIVE(command, "neg") == 0 || STRCMP_CASE_INSENSITIVE(command, "gris") == 0){
             char *inputFile = strtok(NULL," ");
             char *outputFile = strtok(NULL," ");
-            char *text;
+            char text[64];
 
             if(inputFile == NULL){
                 printf(ANSI_COLOR_RED "Erreur: la commande %s necessite un fichier en entree\n" ANSI_COLOR_RESET, command);
@@ -59,11 +59,28 @@ int main(){
 
             Image *img = read_ppm(inputFile);
             if (img != NULL) {
-                // if 'gris' : convert_to_grayscale(img); // Opération sur place
+                // if 'gris' : convert_to_grayscale(img); // Opération sur place       
+                if(STRCMP_CASE_INSENSITIVE(command, "gris") == 0){
+                    convert_to_grayscale(img);
+
+                    if(!outputFile)
+                        outputFile = generate_file_name(inputFile, command);
+
+                    generate_ppm(outputFile, img);
+                    const char *basename = strrchr(outputFile, '/');
+
+                    if (!basename) 
+                        basename = strrchr(outputFile, '\\');
+                    if (basename) 
+                        basename++;  // sauter le slash
+
+                    printf(ANSI_COLOR_BLUE "🎉 Voilà votre fichier : %s !\n" ANSI_COLOR_RESET , basename ? basename : outputFile);
+                }
+
                 // if 'fil' : img = apply_median_filter(img); // Opération retournant une nouvelle image
                 // ...
                 // write_ppm(outputFile, img, text);
-                // free_image(img);
+                free_image(img);
             }
         }
         else if (STRCMP_CASE_INSENSITIVE(command, "size") == 0) {
@@ -126,8 +143,14 @@ int main(){
                 continue;
             }
 
-            if (outputFile == NULL)
-                outputFile = generate_file_name(inputFile, "cut");
+            if(!fileExist(inputFile)){
+                printf(ANSI_COLOR_RED"Erreur: fichier %s introuvable"ANSI_COLOR_RESET, inputFile);
+                continue;
+            }
+
+            if (outputFile == NULL){
+                outputFile = generate_file_name(inputFile, command);
+            }
 
             // ... Conversion des coordonnées strL1, strL2, strC1, strC2 en int ...
             int l1 = atoi(strL1);
@@ -140,20 +163,25 @@ int main(){
             if (img == NULL) {
                 continue;
             }
-
-            Image *cropped_img = crop_image(img, l1, l2, c1, c2); 
-            free_image(img);
+            
+            if (l1 < 0 || l2 >= img->height || c1 < 0 || c2 >= img->width || l1 > l2 || c1 > c2) {
+                printf(ANSI_COLOR_RED "Erreur: coordonnées de découpe invalides.\n" ANSI_COLOR_RESET);
+                free_image(img);
+                continue;
+            }
+            Image *cropped_img = crop_image(img, l1, l2, c1, c2);
 
             if (cropped_img != NULL) {
-                generate_ppm(outputFile, cropped_img, "cut");
-                /*if (generate_ppm(outputFile, cropped_img, "cut")) {
-                    printf(ANSI_COLOR_BLUE "%s\n" ANSI_COLOR_RESET, outputFile);
-                } else {
-                    printf(ANSI_COLOR_RED "Erreur lors de l'écriture du fichier de résultat '%s'.\n" ANSI_COLOR_RESET, outputFile);
-                }*/
+                generate_ppm(outputFile, cropped_img);
+                const char *basename = strrchr(outputFile, '/');
+                if (!basename) basename = strrchr(outputFile, '\\');
+                if (basename) basename++;  // sauter le slash
+
+                printf(ANSI_COLOR_BLUE "🎉 Voilà votre fichier : %s !\n %s\n" ANSI_COLOR_RESET , basename ? basename : outputFile);
+                //printf(ANSI_COLOR_BLUE "%s\n" ANSI_COLOR_RESET, outputFile);
                 free_image(cropped_img);
             } else {
-                printf("Erreur: Découpage de l'image échoué.\n");
+                printf(ANSI_COLOR_RED "Erreur: Découpage de l'image échoué.\n" ANSI_COLOR_RESET);
             }
 
         }

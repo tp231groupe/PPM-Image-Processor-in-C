@@ -89,18 +89,20 @@ bool fileExist(const char *chemin_fichier) {
  * @return Un pointeur vers une chaîne de caractères allouée dynamiquement 
  * contenant le nouveau nom de fichier de sortie.
  */
-char *generate_file_name(char *input_file, char *operation){
+char *generate_file_name(char *inputFile, char *operation){
 
+    static char new_filename[514]; 
+    char *dot = strrchr(inputFile, '.');
+    size_t len = dot - inputFile;
+    strncpy(new_filename, inputFile, len);
+    new_filename[len] = '\0';
 
-    char *output_file_name; 
-    char *dot = strrchr(input_file, '.');
-    size_t len = dot - input_file;
-    strncpy(output_file_name, input_file, len);
-    output_file_name[len] = '\0';
+    strcat(new_filename, "-generate");
+    if (operation && strlen(operation) > 0) {
+        strcat(new_filename, "-");
+        strcat(new_filename, operation);
+    }
+    strcat(new_filename, dot);  // ajoute ".ppm"
 
-    strcat(output_file_name, operation);
-    strcat(output_file_name, dot);  // ajoute ".ppm"
-
-    return output_file_name;
-
+    return new_filename;
 }

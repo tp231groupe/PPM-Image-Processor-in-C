@@ -20,16 +20,24 @@ Image* read_ppm(const char *filename) {
     char maggic_number[3];
     FILE *file = fopen(filename, "r");
     
-
-    fscanf(file, "%2s", &img->magic_number);
+    fscanf(file, "%2s", img->magic_number);
     //skip_comments(file);
     fscanf(file, "%u %u", &img->width, &img->height);
     //skip_comments(file);
     fscanf(file, "%u", &img->max_val);
 
     img->pixels = malloc(img->height * sizeof(Pixel*));
-    for(int i = 0; i < img->height; i++)
+
+    for(int i = 0; i < img->height; i++){
         img->pixels[i] = malloc(img->width * sizeof(Pixel));
+        if (!img->pixels[i]) {
+            for (int j = 0; j < i; j++) free(img->pixels[j]);
+              free(img->pixels);
+            free(img);
+            return NULL;
+        }
+    }
+
     for(int i = 0; i< img->height; i++){
         for(int j = 0; j < img->width; j++){
             unsigned r, g, b;
@@ -54,7 +62,7 @@ Image* read_ppm(const char *filename) {
  * @param text Le nom a ajouter au fichier generer en fonction des operations effectues sur une autre image pour l'obtenir
  * @return 0 en cas de succès, -1 en cas d'erreur (échec de l'ouverture du fichier).
  */
-void generate_ppm(const char *filename, const Image *img, char *text){
+void generate_ppm(const char *filename, const Image *img){
     // 1. Ouvrir le fichier en mode écriture (utiliser fopen) ; vérifier le succès.
     // 2. Écrire l'en-tête du fichier PPM en utilisant fprintf :
     //    a. Version (P3).
@@ -64,17 +72,8 @@ void generate_ppm(const char *filename, const Image *img, char *text){
     // 4. Pour chaque pixel, écrire ses trois composantes de couleur (R, G, B) en tant qu'entiers séparés par des espaces ou des sauts de ligne.
     // 5. Fermer le fichier.
     // 6. Retourner 0.
-
-    char new_filename[512]; 
-    char *dot = strrchr(filename, '.');
-    size_t len = dot - filename;
-    strncpy(new_filename, filename, len);
-    new_filename[len] = '\0';
-
-    strcat(new_filename, "-generate");
-    strcat(new_filename, dot);  // ajoute ".ppm"
     
-    FILE *file = fopen(new_filename,"w");
+    FILE *file = fopen(filename,"w");
     
     fprintf(file, "%s\n", img->magic_number);
     fprintf(file, "%u %u\n", img->width, img->height);
@@ -82,7 +81,7 @@ void generate_ppm(const char *filename, const Image *img, char *text){
 
     for(int i = 0; i< img->height; i++){
         for(int j = 0; j < img->width; j++){
-            fprintf(file, "%u %u %u", img->pixels[i][j].r ,img->pixels[i][j].g,img->pixels[i][j].b);
+            fprintf(file, "%u %u %u ", img->pixels[i][j].r ,img->pixels[i][j].g,img->pixels[i][j].b);
         }
         fprintf(file, "\n");
     }
@@ -108,6 +107,9 @@ void free_image(Image *img) {
     }
 
     if (img->pixels != NULL) {
+        for (int i = 0; i < img->height; i++) {
+            free(img->pixels[i]);
+        }
         free(img->pixels);
         img->pixels = NULL;
     }

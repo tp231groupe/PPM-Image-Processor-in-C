@@ -95,7 +95,7 @@ void display_size(const Image *img){
     // 1. Accéder aux champs img->width (largeur) et img->height (hauteur) de la structure.
     // 2. Afficher les dimensions sur la sortie standard au format "largeur x hauteur" (ex: "100x205").
 
-    printf("%u x %u", img->width, img->height);
+    printf("%u x %u\n", img->width, img->height);
 
 }
 
@@ -114,7 +114,16 @@ void display_size(const Image *img){
  */
 
 Image* crop_image(const Image *img, int l1, int l2, int c1, int c2){ // <-- MAR'RYAM
-    
+    // 1. Valider les coordonnées : Vérifier si l1 < l2 <= img->height ET c1 < c2 <= img->width[cite: 61].
+    // 2. Si les coordonnées sont invalides, retourner NULL (ou gérer l'erreur).
+    // 3. Calculer la nouvelle largeur (new_w = c2 - c1) et la nouvelle hauteur (new_h = l2 - l1).
+    // 4. Allouer dynamiquement la mémoire pour la nouvelle structure Image et son nouveau tableau de pixels (taille : new_w * new_h).
+    // 5. Copier les informations d'en-tête (version, max_color_val) de l'image originale.
+    // 6. Définir la largeur et la hauteur de la nouvelle image à new_w et new_h.
+    // 7. Parcourir les pixels *originaux* qui correspondent à la région de découpe (en utilisant les indices 0-basés : l1-1 à l2-1 et c1-1 à c2-1).
+    // 8. Copier les données des pixels de l'image originale vers le nouveau tableau de pixels, en s'assurant de la bonne séquence ligne par ligne.
+    // 9. Retourner le pointeur vers la nouvelle structure Image.
+
     if (l1 >= l2 || l2 > img->height || c1 >= c2 || c2 > img->width || l1 < 1 || c1 < 1) {
         return NULL;
     }
