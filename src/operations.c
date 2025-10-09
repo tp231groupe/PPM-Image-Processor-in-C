@@ -24,6 +24,60 @@ void adjust_dominant_color(Image *img, char dominant_color, int value){ // <-- R
     //    c. Mettre à jour les composantes R, G, B du pixel avec les valeurs écrêtées.
 
     //code here
+    img.pixels = malloc(img.largeur*sizeof(Pixel *));
+   for(int i = 0; i < img.hauteur;i++){
+     img.pixels[i]= malloc(img.largeur * sizeof(Pixel));
+   }
+
+   for(int i = 0;i < img.hauteur; i++){
+     for(int j = 0;j< img.largeur; j++){
+       fscanf(f,"%d %d %d", &img.pixels[i][j].rouge, &img.pixels[i][j].vert, &img.pixels[i][j].bleu);
+     }
+   }
+    fclose(f);
+
+   int choix;
+   printf("\n1 - Augmenter l'intensite de la couleur dominante\n");
+   printf("2 - Diminuer l'intensite de la couleur dominante");
+   printf("Votre choix: ");
+   scanf("%d",&choix);
+    while(choix != 1 && choix != 2){
+       printf("choix invalide! Veuillez entrer 1 ou 2");
+       scanf("%d",&choix);
+    }
+
+   value = (choix == 1) ? 50 : -50;
+   for (int i = 0;i < img->hauteur; i++){
+     for(int j = 0;j < img->largeur; j++){
+        Pixel *p = &img->pixels[i][j];
+         char *val=unsigned find_max_rgb(p->rouge, p->vert, p->bleu);
+           if(choix == 1 && (strcmp(*p, dominant_color))==0)
+           {
+             *p->rouge += value;
+             *p->rouge = unsigned clamp (*p->rouge);
+              *p->vert += value;
+             *p->vert = unsigned clamp (*p->vert);
+             *p->bleu += value;
+             *p->bleu = unsigned clamp (*p->bleu);
+            }
+           else if(choix == 2 && (strcmp(*p, val)) == 0){
+              *p->rouge -= value;
+             *p->rouge = unsigned clamp (*p->rouge);
+              *p->vert -= value;
+             *p->vert = unsigned clamp (*p->vert);
+               *p->bleu -= value;
+              *p->bleu = unsigned clamp (*p->bleu);
+           }
+           else
+             printf("couleur non correspondante");
+
+           img->pixels[i][j].rouge = *p->rouge;
+           img->pixels[i][j].vert = *p->vert;
+           img->pixels[i][j].bleu = *p->bleu;
+
+      }
+    }
+}
 }
 
 /**
