@@ -92,7 +92,7 @@ int main(){
 
                     printf(ANSI_COLOR_BLUE "🎉 Voilà votre fichier : %s !\n" ANSI_COLOR_RESET , basename ? basename : outputFile);
                 }
-                // write_ppm(outputFile, img, text);
+                
                 free_image(img);
             }
         }

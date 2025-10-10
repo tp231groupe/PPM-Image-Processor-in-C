@@ -20,17 +20,9 @@ unsigned find_max_rgb(unsigned r, unsigned g, unsigned b){
     // Puisque les valeurs sont déjà garanties dans [0, 255] par la structure Pixel,
     // l'utilisation de 'unsigned char' en entrée et en sortie est la plus appropriée.
 
-    unsigned max = r; 
-
-    if (g > max) {
-        max = g;
-    }
-
-    if (b > max) {
-        max = b;
-    }
-
-    return max;
+    if (r >= g && r >= b) return 'R';
+    else if (g >= r && g >= b) return 'G';
+    else return 'B';
 }
 
 

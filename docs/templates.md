@@ -1,8 +1,9 @@
-## **matricule-Nom-Prénom**
+## **matricule-Prénom-NOM**
 
-> Rapport d'Avancement Individuel (Cours/Module - TP/TD Numéro)
+>Rapport d'Avancement Individuel (Cours/Module - TP/TD 3) - Projet de Manipulation d’Images PPM (CLI)
 
-### **Séance [Numéro] : [Jour Semaine] [Date, ex: 01/10/2025]**
+
+### **Séance 1 : [Jour Semaine] [Date, ex: 01/10/2025]**
 
 | Section | Détails de la Séance |
 | :--- | :--- |
@@ -15,7 +16,7 @@
 
 ---
 
-### **Séance [Numéro] : [Jour Semaine] [Date, ex: 02/10/2025]**
+### **Séance 2 : [Jour Semaine] [Date, ex: 02/10/2025]**
 
 | Section | Détails de la Séance |
 | :--- | :--- |

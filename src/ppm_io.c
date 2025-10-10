@@ -17,7 +17,6 @@ Image* read_ppm(const char *filename) {
 
     Image *img;
     img = malloc(sizeof(Image));
-    char maggic_number[3];
     FILE *file = fopen(filename, "r");
     
     fscanf(file, "%2s", img->magic_number);

@@ -33,9 +33,9 @@ void adjust_dominant_color(Image *img, char dominant_color, int value){ // <-- R
             char max_color = find_max_rgb(p->r, p->g, p->b);
 
             if (max_color == dominant_color) {
-                p->r = clamp(p->r + value);
-                p->g = clamp(p->g + value);
-                p->b = clamp(p->b + value);
+                p->r = clamp(p->r - value);
+                p->g = clamp(p->g - value);
+                p->b = clamp(p->b - value);
             }
         }
     }
@@ -49,7 +49,7 @@ void adjust_dominant_color(Image *img, char dominant_color, int value){ // <-- R
  *
  * @param img Pointeur vers la structure Image à modifier.
  */
-void convert_to_grayscale(Image *images){ //Responsable<-- FATIMATOU Njapndounke 
+void convert_to_grayscale(Image *images){ // <-- FATIMATOU Njapndounke 
     // 1. Parcourir tous les pixels dans le tableau img->pixels.
     // 2. Pour chaque pixel (r, g, b):
     //    a. Calculer la valeur moyenne : moyenne = (r + g + b) / 3.
