@@ -242,8 +242,8 @@ typedef struct {
 | :-------------------------------- | :-------------------------- | :------------------------------------------------------------------------------ |
 | **Philbert NGAMIZE**              | Chef de Projet / Architecte | `ppm_io.c`, `main.c`, `create_negatif`,  `apply_median_filter`, `display_size` |
 | **MFOPIT Mar’yam**                | Développeur C               | `crop_image`                                                                    |
-| **NjapndounkeNchankou Fadimatou** | Développeur C               | `convert_to_grayscale`                                                          |
-| **[Membre 4]**                    | Développeur C               |    `adjust_dominant_color`                                                       |
+| **Njapndounke Nchankou Fadimatou** | Développeur C               | `convert_to_grayscale`                                                          |
+| **Raissa MESSINA**                    | Développeur C               |    `adjust_dominant_color`                                                       |
 
 ---
 

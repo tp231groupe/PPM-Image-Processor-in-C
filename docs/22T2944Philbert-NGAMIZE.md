@@ -69,7 +69,7 @@
 
 ### **Synthèse de la Période**
 
-* **Travail Réalisé :** réalisation d'un **CLI**, fonction d'affichage de la taille d'une image ppm `display_size`, fonction negatif `create_negatif`(donner le negatif d'une image ppm), integration des différents features depuis des branches **Git/Github**
+* **Travail Réalisé :** réalisation d'un **CLI**, fonction d'affichage de la taille d'une image ppm `display_size`, fonction negatif `create_negatif`(donner le negatif d'une image ppm), la fonction ``apply_median_filter`, integration des différents features depuis des branches **Git/Github**
 * **Temps Total :** ≈ 42 heures
 
 ---
