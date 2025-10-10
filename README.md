@@ -228,10 +228,12 @@ typedef struct {
 
 ```c
 typedef struct {
-    unsigned int width;
-    unsigned int height;
-    Pixel **pixels;
+    char magic_number[3];    // Ex: "P3"
+    unsigned width, height;  // Largeur et hauteur en pixels
+    unsigned max_val;  // Valeur maximale (Ex: 255)
+    Pixel **pixels;      // Tableau dynamique des pixels
 } Image;
+
 ```
 
 ---
